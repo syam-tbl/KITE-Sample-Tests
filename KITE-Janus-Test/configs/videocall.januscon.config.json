@@ -3,9 +3,9 @@
   "name": "Janus Video Call Local",
   "permute": true,
   "matrix": [[0,1]],
-  "networkInstrumentation": {
-    "instances": "file:///GitHub/KITE-Private-Tests/KITE-Common/configs/cosmogrid.gateways.config.json",
-    "networkProfiles": "file:///GitHub/KITE-Private-Tests/KITE-Common/configs/network.profiles.config.json"
+  "_networkInstrumentation": {
+    "instances": "path_to/cosmogrid.gateways.config.json",
+    "networkProfiles": "path_to/network.profiles.config.json"
   },
   "grids": [
     {
