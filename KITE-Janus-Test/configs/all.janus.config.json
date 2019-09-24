@@ -17,7 +17,7 @@
       "payload": {
         "url": "https://janus.conf.meetecho.com/echotest.html",
         "_url": "https://janus.conf.meetecho.com/echotest.html?simulcast=true",
-        "usersPerRoom": 2,
+        "usersPerRoom": 1,
         "pageTitle": "Janus Echo Test",
         "takeScreenshotForEachTest": true,
         "testTimeout": 20,
@@ -112,15 +112,11 @@
   "clients": [
     {
       "browserName": "chrome",
-      "version": "76",
-      "platform": "localhost",
-      "headless": false
+      "platform": "localhost"
     },
     {
       "browserName": "firefox",
-      "version": "68",
-      "platform": "localhost",
-      "headless": false
+      "platform": "localhost"
     }
   ]
 }

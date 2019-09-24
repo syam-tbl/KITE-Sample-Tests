@@ -5,6 +5,7 @@ import io.cosmosoftware.kite.interfaces.Runner;
 import io.cosmosoftware.kite.janus.pages.JanusPage;
 import io.cosmosoftware.kite.report.Reporter;
 import io.cosmosoftware.kite.report.Status;
+import io.cosmosoftware.kite.steps.StepPhase;
 import io.cosmosoftware.kite.steps.TestStep;
 import org.openqa.selenium.WebDriver;
 
@@ -48,6 +49,7 @@ public class GetStatsStep extends TestStep {
     this.janusPage = janusPage;
     this.getStatsConfig = getStatsConfig;
     this.sfu = sfu;
+    setStepPhase(StepPhase.ALL);
   }
 
 

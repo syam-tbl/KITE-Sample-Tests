@@ -51,14 +51,12 @@
   "clients": [
     {
       "browserName": "chrome",
-      "version": "76",
       "platform": "localhost",
       "windowSize": "1280,800",
       "headless": false
     },
     {
       "browserName": "chrome",
-      "version": "75",
       "platform": "localhost",
       "windowSize": "1280,800",
       "fakeMediaFile": "D:\\Videos\\Samples\\y4m\\avenger_trailer.y4m",
@@ -68,7 +66,6 @@
     {
       "browserName": "firefox",
       "windowSize": "1280,800",
-      "version": "68",
       "platform": "localhost",
       "headless": false
     },

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static io.cosmosoftware.kite.entities.Timeouts.TEN_SECOND_INTERVAL_IN_SECONDS;
+
 public class JanusPage extends BasePage {
 
   private final String PUBLISHING = "//b[text()='Publishing...']";
@@ -115,7 +117,7 @@ public class JanusPage extends BasePage {
   }
 
   public void startOrStopDemo() throws KiteInteractionException {
-    waitUntilVisibilityOf(startStopButton, 2);
+    waitUntilVisibilityOf(startStopButton, TEN_SECOND_INTERVAL_IN_SECONDS);
     click(startStopButton, true);
   }
 
