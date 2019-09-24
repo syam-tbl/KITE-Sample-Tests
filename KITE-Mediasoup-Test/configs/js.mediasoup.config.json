@@ -39,13 +39,11 @@
   "clients": [
     {
       "browserName": "chrome",
-      "version": "76",
       "platform": "localhost",
       "headless": false
     },
     {
       "browserName": "firefox",
-      "version": "68",
       "platform": "localhost",
       "headless": false
     }

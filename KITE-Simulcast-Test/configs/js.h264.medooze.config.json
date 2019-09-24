@@ -32,7 +32,6 @@
   "clients": [
     {
       "browserName": "chrome",
-      "version": "76",
       "platform": "localhost",
       "headless": false
     }
