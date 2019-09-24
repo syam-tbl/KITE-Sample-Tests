@@ -74,6 +74,7 @@ public class JanusVideoCallTest extends KiteBaseTest {
       for (Scenario scenario : scenarioArrayList ) {
         runner.addStep(new WaitForOthersStep(runner, this, runner.getLastStep()));
         runner.addStep(new NWInstrumentationStep(runner, scenario, runner.getId()));
+        runner.addStep(new ScreenshotStep(runner));
       }
 
       if (this.meetingDuration > 0) {
