@@ -22,10 +22,6 @@ public class StartVideoCallStep extends TestStep {
     this.roomManager = roomManager;
   }
 
-
-
-
-
   @Override
   public String stepDescription() {
     if (id % roomManager.getUsersPerRoom() == 0) {

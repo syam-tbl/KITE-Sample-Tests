@@ -23,6 +23,7 @@ public class OpenUrlStep extends TestStep {
     this.user = user;
     this.pass = pass;
     this.mainPage = mainPage;
+    this.setOptional(false);
   }
   
   

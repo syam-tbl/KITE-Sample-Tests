@@ -36,54 +36,31 @@ public class AllVideoCheck extends TestStep {
 
   @Override
   protected void step() throws KiteTestException {
-    try {
-      //wait a while to allow all videos to load.;
-      List<WebElement> videos = mainPage.getVideoElements();
-      int waitingTime = 0;
-      while(videos.size() < numberOfParticipants && waitingTime < 10 * numberOfParticipants) {
-        logger.debug("numberOfParticipants = " + numberOfParticipants + ", waitingTime = " + waitingTime);
-        waitAround(ONE_SECOND_INTERVAL);
-        videos = mainPage.getVideoElements();
-        waitingTime += 1;
-      }
-      if (videos.size() < numberOfParticipants) {
-        throw new KiteTestException(
-          "Unable to find " + numberOfParticipants + " <video> element on the page. No video found = "
-            + videos.size(), Status.FAILED);
-      }
-      waitAround(numberOfParticipants * ONE_SECOND_INTERVAL);
-      String videoCheck = "";
-      boolean error = false;
+    waitAround(numberOfParticipants * ONE_SECOND_INTERVAL * 2);
+    List<Integer> videoIndex = mainPage.getVideoIndex();
+    if (videoIndex.size() == 0) {
+      throw new KiteTestException("No valid video with proper size was found on the page", Status.FAILED);
+    }
 
-      for (int i = 0; i < videos.size(); i++) {
-        //debug code to help identifying the video. Can be deleted.
-        Rectangle r = videos.get(i).getRect();
-        logger.debug("Video[" + i +"] " + r.x + ", " + r.y + ", " + r.width + ", " + r.width + "  "
-          + videos.get(i).getCssValue("display"));
+    if (videoIndex.size() < 2) {
+      throw new KiteTestException("Only one video found, the number of video is not correct", Status.FAILED);
+    }
+    String videoCheck = "";
+    boolean error = false;
+
+    for (int i = 0; i < videoIndex.size(); i++) {
+      String v = videoCheck(webDriver, videoIndex.get(i));
+      videoCheck += v;
+      if (i < numberOfParticipants - 1) {
+        videoCheck += "|";
       }
-      
-      //first video is the fullscreen
-      //second video is "display": "none"
-      //third video is "You" (the publisher)
-      final int FIRST_VIDEO_INDEX = videos.size() > 1 ? 2 : 0;
-      for (int i = FIRST_VIDEO_INDEX + 1; i < numberOfParticipants; i++) {
-        String v = videoCheck(webDriver, i);
-        videoCheck += v;
-        if (i < numberOfParticipants - 1) {
-          videoCheck += "|";
-        }
-        if (!"video".equalsIgnoreCase(v)) {
-          error = true;
-        }
+      if (!"video".equalsIgnoreCase(v)) {
+        error = true;
       }
-      if (error) {
-        reporter.textAttachment(report, "Received Videos", videoCheck, "plain");
-        throw new KiteTestException("Some videos are still or blank: " + videoCheck, Status.FAILED);
-      }
-    } catch (KiteTestException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new KiteTestException("Error looking for the video", Status.BROKEN, e);
+    }
+    if (error) {
+      reporter.textAttachment(report, "Received Videos", videoCheck, "plain");
+      throw new KiteTestException("Some videos are still or blank: " + videoCheck, Status.FAILED);
     }
   }
 }

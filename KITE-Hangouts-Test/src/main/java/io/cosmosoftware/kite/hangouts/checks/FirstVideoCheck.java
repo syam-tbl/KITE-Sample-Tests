@@ -14,6 +14,7 @@ import static io.cosmosoftware.kite.entities.Timeouts.SHORT_TIMEOUT_IN_SECONDS;
 import static io.cosmosoftware.kite.util.ReportUtils.saveScreenshotPNG;
 import static io.cosmosoftware.kite.util.ReportUtils.timestamp;
 import static io.cosmosoftware.kite.util.TestUtils.videoCheck;
+import static io.cosmosoftware.kite.util.TestUtils.waitAround;
 
 public class FirstVideoCheck extends TestStep {
 
@@ -32,29 +33,18 @@ public class FirstVideoCheck extends TestStep {
 
   @Override
   protected void step() throws KiteTestException {
-    try {
-      logger.info("Looking for video object");
-      mainPage.videoIsPublishing(SHORT_TIMEOUT_IN_SECONDS);
-      List<WebElement> videos = mainPage.getVideoElements();
-      if (videos.isEmpty()) {
-        throw new KiteTestException(
-            "Unable to find any <video> element on the page", Status.FAILED);
-      }
-      //first video is the fullscreen
-      //second video is "display": "none"
-      //third video is "You" (the publisher)
-      final int FIRST_VIDEO_INDEX = videos.size() > 1 ? 2 : 0;
-      String videoCheck = videoCheck(webDriver, FIRST_VIDEO_INDEX);
-      if (!"video".equalsIgnoreCase(videoCheck)) {
-        reporter.screenshotAttachment(report,
-          "FirstVideoCheck_" + timestamp(), saveScreenshotPNG(webDriver));
-        reporter.textAttachment(report, "Sent Video", videoCheck, "plain");
-        throw new KiteTestException("The first video is " + videoCheck, Status.FAILED);
-      }
-    } catch (KiteTestException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new KiteTestException("Error looking for the video", Status.BROKEN, e);
+    mainPage.videoIsPublishing(SHORT_TIMEOUT_IN_SECONDS);
+    List<Integer> videoIndex = mainPage.getVideoIndex();
+    if (videoIndex.size() == 0) {
+      throw new KiteTestException("No valid video with proper size was found on the page", Status.FAILED);
+    }
+    // Checking first video, assuming there's only one at the moment
+    String videoCheck = videoCheck(webDriver, videoIndex.get(0));
+    if (!"video".equalsIgnoreCase(videoCheck)) {
+      reporter.screenshotAttachment(report,
+        "FirstVideoCheck_" + timestamp(), saveScreenshotPNG(webDriver));
+      reporter.textAttachment(report, "Sent Video", videoCheck, "plain");
+      throw new KiteTestException("The first video is " + videoCheck, Status.FAILED);
     }
   }
 }
