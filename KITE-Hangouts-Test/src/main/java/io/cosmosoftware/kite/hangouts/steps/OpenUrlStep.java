@@ -35,6 +35,7 @@ public class OpenUrlStep extends TestStep {
   @Override
   protected void step() throws KiteTestException {
     mainPage.open(url);
+    waitAround(2000);
     mainPage.clickSignIn();
     mainPage.enterEmail(user);
     mainPage.enterPassword(pass);
