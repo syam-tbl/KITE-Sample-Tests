@@ -3,6 +3,8 @@ package io.cosmosoftware.kite.hangouts.pages;
 import io.cosmosoftware.kite.exception.KiteInteractionException;
 import io.cosmosoftware.kite.interfaces.Runner;
 import io.cosmosoftware.kite.pages.BasePage;
+import java.util.ArrayList;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -140,4 +142,30 @@ public class MainPage extends BasePage {
     return videos;
   }
 
+  /**
+   * Gets the index of the videos that are actually displayed (height & width > 0)
+   * @return an array of valid video index
+   */
+  public List<Integer> getVideoIndex() {
+    List<Integer> index = new ArrayList<>();
+    List<WebElement> temp = this.videos;
+    for (int i = 0; i < temp.size(); i ++) {
+      try {
+        WebElement video = temp.get(i);
+        if (video.isDisplayed()) {
+          if (parseCssValue(video.getCssValue("height")) > 5
+          && parseCssValue(video.getCssValue("width")) > 5 ) {
+            index.add(i);
+          }
+        }
+      }catch (Exception e) {
+        // ignore
+      }
+    }
+    return index;
+  }
+
+  private int parseCssValue(String value) {
+    return Integer.parseInt(value.split("px")[0]);
+  }
 }
