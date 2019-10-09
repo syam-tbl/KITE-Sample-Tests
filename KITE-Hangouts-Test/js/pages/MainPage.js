@@ -85,7 +85,7 @@ class MainPage {
     let timeout = stepInfo.timeout;
 
     // Waiting for the videos
-    await TestUtils.waitForVideos(stepInfo, this.videos);
+    await TestUtils.waitForVideos(stepInfo, videoElements);
 
     // Check the status of the video
     // checked.result = 'blank' || 'still' || 'video'

@@ -49,7 +49,7 @@ public class AllVideoCheck extends TestStep {
     boolean error = false;
 
     for (int i = 0; i < videoIndex.size(); i++) {
-      String v = videoCheck(webDriver, videoIndex.get(i));
+      String v = videoCheck(webDriver, videoIndex.get(i), 10000);
       videoCheck += v;
       if (i < numberOfParticipants - 1) {
         videoCheck += "|";

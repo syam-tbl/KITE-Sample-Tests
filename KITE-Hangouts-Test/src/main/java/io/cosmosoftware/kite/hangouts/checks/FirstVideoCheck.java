@@ -39,7 +39,7 @@ public class FirstVideoCheck extends TestStep {
       throw new KiteTestException("No valid video with proper size was found on the page", Status.FAILED);
     }
     // Checking first video, assuming there's only one at the moment
-    String videoCheck = videoCheck(webDriver, videoIndex.get(0));
+    String videoCheck = videoCheck(webDriver, videoIndex.get(0), 10000);
     if (!"video".equalsIgnoreCase(videoCheck)) {
       reporter.screenshotAttachment(report,
         "FirstVideoCheck_" + timestamp(), saveScreenshotPNG(webDriver));
