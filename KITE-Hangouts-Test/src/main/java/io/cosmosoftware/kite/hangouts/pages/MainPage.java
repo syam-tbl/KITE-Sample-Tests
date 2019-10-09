@@ -5,6 +5,7 @@ import io.cosmosoftware.kite.interfaces.Runner;
 import io.cosmosoftware.kite.pages.BasePage;
 import java.util.ArrayList;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -17,6 +18,7 @@ import java.util.Set;
 import static io.cosmosoftware.kite.entities.Timeouts.*;
 import static io.cosmosoftware.kite.util.TestUtils.waitAround;
 import static io.cosmosoftware.kite.util.WebDriverUtils.loadPage;
+import static io.cosmosoftware.kite.util.WebDriverUtils.switchWindowHandler;
 
 public class MainPage extends BasePage {
 
@@ -49,6 +51,9 @@ public class MainPage extends BasePage {
 
   @FindBy(xpath = "//*[@id=\"yDmH0d\"]/div[6]/div/div[2]/div[2]/div[3]/div/span")
   WebElement closePopup;
+
+  @FindBy(className = "g3VIld")
+  WebElement popup;
 
   public MainPage(Runner runner) {
     super(runner);
@@ -103,30 +108,24 @@ public class MainPage extends BasePage {
     waitUntilVisibilityOf(videoCallButton, TEN_SECOND_INTERVAL_IN_SECONDS);
     String parentWinHandle = webDriver.getWindowHandle();
     click(videoCallButton);
-    waitAround(THREE_SECOND_INTERVAL);
-    new WebDriverWait(webDriver,
-      TEN_SECOND_INTERVAL_IN_SECONDS).until(
-      d -> {
-    Set<String> winHandles = d.getWindowHandles();
-    for (String w:winHandles) {
-      if (!w.equals(parentWinHandle)) {
-        d.switchTo().window(w);
-        waitAround(ONE_SECOND_INTERVAL);
-        return true;
+    waitAround(ONE_SECOND_INTERVAL);
+    for (String s : webDriver.getWindowHandles()) {
+      if (!parentWinHandle.equals(s)) {
+        webDriver.switchTo().window(s);
+        break;
       }
     }
-    return false;
-    });
-    try {
-      waitUntilVisibilityOf(closePopup, TEN_SECOND_INTERVAL_IN_SECONDS);
-      click(closePopup);
-    } catch (KiteInteractionException e) {
-      //ignore
-      logger.debug("Unable to close the popup ", e);
-    }
-    
+    closePopup();
   }
 
+
+  public String getCurrentURL() {
+    return this.webDriver.getCurrentUrl();
+  }
+
+  private void closePopup() {
+    popup.sendKeys(Keys.ESCAPE);
+  }
 
   public void videoIsPublishing(int timeout) throws TimeoutException, KiteInteractionException {
     if (videos.size() < 1) {

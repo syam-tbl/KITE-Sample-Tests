@@ -31,21 +31,19 @@ public class KiteHangoutsTest extends KiteBaseTest {
   public void populateTestSteps(TestRunner runner) {
     //sign in to hangout
     MainPage mainPage = new MainPage(runner);
-    runner.addStep(new OpenUrlStep(runner, mainPage, url, 
+    runner.addStep(new OpenUrlStep(runner, mainPage, url,
       users.getJsonObject(runner.getId()).getString("user"),
       users.getJsonObject(runner.getId()).getString("pass")));
-    //first user starts the video call, others wait
-    runner.addStep(new StartVideoCallStep(runner, this.roomManager, mainPage));
+    // first user starts the video call, others wait
+    if (runner.getId() % roomManager.getUsersPerRoom() == 0) {
+      runner.addStep(new StartVideoCallStep(runner, this.roomManager, mainPage));
+    } else {
+      runner.addStep(new JoinVideoCallStep(runner, this.roomManager, mainPage));
+    }
     if (this.windowWidth > 0 && this.windowHeight > 0) {
-      runner.addStep(new ResizeWindowStep(runner, this.windowWidth, this.windowHeight, 
+      runner.addStep(new ResizeWindowStep(runner, this.windowWidth, this.windowHeight,
         getX(runner.getId()), getY(runner.getId())));
     }
-    //all users wait for the call to be started.
-    runner.addStep(new WaitForOthersStep(runner, this, runner.getLastStep()));
-    runner.addStep(new JoinVideoCallStep(runner, this.roomManager, mainPage));
-    runner.addStep(new WaitForOthersStep(runner, this, runner.getLastStep()));
-
-    runner.addStep(new FirstVideoCheck(runner, mainPage));
     runner.addStep(new AllVideoCheck(runner, getMaxUsersPerRoom(), mainPage));
     runner.addStep(new ScreenshotStep(runner));
     if (this.meetingDuration > 0) {

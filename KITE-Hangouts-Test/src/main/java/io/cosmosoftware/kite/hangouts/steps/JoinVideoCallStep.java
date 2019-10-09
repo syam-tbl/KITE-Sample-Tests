@@ -3,9 +3,13 @@ package io.cosmosoftware.kite.hangouts.steps;
 import io.cosmosoftware.kite.exception.KiteTestException;
 import io.cosmosoftware.kite.hangouts.pages.MainPage;
 import io.cosmosoftware.kite.manager.RoomManager;
+import io.cosmosoftware.kite.report.Status;
 import io.cosmosoftware.kite.steps.TestStep;
 import org.webrtc.kite.tests.TestRunner;
 
+import static io.cosmosoftware.kite.entities.Timeouts.DEFAULT_TIMEOUT;
+import static io.cosmosoftware.kite.entities.Timeouts.ONE_SECOND_INTERVAL;
+import static io.cosmosoftware.kite.entities.Timeouts.SHORT_TIMEOUT;
 import static io.cosmosoftware.kite.entities.Timeouts.THREE_SECOND_INTERVAL;
 import static io.cosmosoftware.kite.util.TestUtils.waitAround;
 
@@ -33,13 +37,22 @@ public class JoinVideoCallStep extends TestStep {
   
   @Override
   protected void step() throws KiteTestException {
-    if (id % roomManager.getUsersPerRoom() == 0) {
-      waitAround(THREE_SECOND_INTERVAL);
-    } else {
-      String roomUrl = roomManager.getDynamicUrl(id);
-      logger.info("Joining call at: " + roomUrl);
-      mainPage.open(roomUrl);
-      mainPage.clickJoin();
+    waitForRoomId ();
+    String roomUrl = roomManager.getDynamicUrl(0);
+    logger.info("Joining call at: " + roomUrl);
+    mainPage.open(roomUrl);
+    mainPage.clickJoin();
+  }
+
+
+  private void waitForRoomId () throws KiteTestException {
+    for (int i = 0; i< DEFAULT_TIMEOUT; i += ONE_SECOND_INTERVAL) {
+      if (roomManager.getDynamicUrl(this.id) == null) {
+        waitAround(ONE_SECOND_INTERVAL);
+      } else {
+        return;
+      }
     }
+    throw new KiteTestException("Waited too long for room url", Status.FAILED);
   }
 }

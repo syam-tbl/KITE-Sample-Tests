@@ -7,6 +7,7 @@ import io.cosmosoftware.kite.steps.TestStep;
 import org.webrtc.kite.tests.TestRunner;
 
 import static io.cosmosoftware.kite.entities.Timeouts.ONE_SECOND_INTERVAL;
+import static io.cosmosoftware.kite.entities.Timeouts.SHORT_TIMEOUT;
 import static io.cosmosoftware.kite.entities.Timeouts.THREE_SECOND_INTERVAL;
 import static io.cosmosoftware.kite.util.TestUtils.waitAround;
 
@@ -24,25 +25,15 @@ public class StartVideoCallStep extends TestStep {
 
   @Override
   public String stepDescription() {
-    if (id % roomManager.getUsersPerRoom() == 0) {
-      return "Starting the video call";
-    } else {
-      return "Waiting for the video call to start";
-    }
+    return "Starting the video call";
   }
 
   @Override
   protected void step() throws KiteTestException {
-    if (id % roomManager.getUsersPerRoom() == 0) {
-      mainPage.startVideoCall();
-      waitAround(ONE_SECOND_INTERVAL);
-      String roomUrl = webDriver.getCurrentUrl();
-      roomManager.setDynamicUrl(id, roomUrl);
-      logger.info("Video call started on url: " + roomUrl);
-    } else {
-      waitAround(THREE_SECOND_INTERVAL);
-    }    
-    
+    mainPage.startVideoCall();
+    String roomUrl = mainPage.getCurrentURL();
+    roomManager.setDynamicUrl(id,roomUrl);
+    logger.info("Video call started on url: " + roomUrl);
   }
-  
+
 }
