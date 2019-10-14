@@ -17,13 +17,13 @@ class Hangout extends KiteBaseTest {
       await loginStep.execute(this);
       
       let startVideoCallStep = new StartVideoCallStep(this);
-      await startVideoCallStep.execute(this);      
+      await startVideoCallStep.execute(this);
       await this.waitAllSteps();
-      
+
       let joinVideoCallStep = new JoinVideoCallStep(this);
-      await joinVideoCallStep.execute(this);      
+      await joinVideoCallStep.execute(this);
       await this.waitAllSteps();
-      
+
       let firstVideoCheck = new FirstVideoCheck(this);
       await firstVideoCheck.execute(this);
 
@@ -31,7 +31,7 @@ class Hangout extends KiteBaseTest {
       await allVideoCheck.execute(this);
 
       await this.waitAllSteps();
-      let screenshotStep = new ScreenshotStep(this);    
+      let screenshotStep = new ScreenshotStep(this);
       await screenshotStep.execute(this);
       
       

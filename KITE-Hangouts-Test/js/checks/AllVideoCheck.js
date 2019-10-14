@@ -1,31 +1,5 @@
 const {TestStep, Status, KiteTestError} = require('kite-common');
-
-const executeStep = async function(stepInfo) {
-  //first video is the fullscreen
-  //second video is "display": "none"
-  //third video is "You" (the publisher)
-  const noVideos = stepInfo.page.getVideos().length;
-  const FIRST_VIDEO_INDEX = noVideos > 1 ? 2 : 0;
-  let result = "";
-  let tmp;
-  let error = false;
-  for(i = FIRST_VIDEO_INDEX + 1; i < noVideos; i++) {
-    let tmp = await stepInfo.page.videoCheck(stepInfo, i);
-    console.log('received video[' + i + '] ' + tmp);
-    result += tmp;
-    if (i < noVideos - 1) {
-      result += ' | ';
-    }
-    if (tmp != 'video') {
-      error = true;
-    }
-  }
-
-  if (error) {
-    stepInfo.testReporter.textAttachment(stepInfo.report, "Received videos", result, "plain");
-    throw new KiteTestError(Status.FAILED, "Some videos are still or blank: " + result);
-  }
-}
+const TEN_SECONDS = 10000;
 
 class AllVideoCheck extends TestStep {
   constructor(kiteBaseTest) {
@@ -45,16 +19,32 @@ class AllVideoCheck extends TestStep {
   }
 
   async step() {
-    try {
-      await executeStep(this);
+    let indexArray = await this.page.getVideoIndex();
+    if (indexArray.length === 0) {
+      throw new KiteTestError(Status.FAILED, "There is no valid video on page");
+    }
+    if (indexArray.length < this.numberOfParticipant) {
+      throw new KiteTestError(Status.FAILED, "There are not enough video to match the number of participants");
 
-    } catch (error) {
-      console.log(error);
-      if (error instanceof KiteTestError) {
-        throw error;
-      } else {
-        throw new KiteTestError(Status.BROKEN, "Error looking for the video");
+    }
+    console.log("indexArray-> " + indexArray);
+    let index;
+    let result = "";
+    let error = false;
+    for (index = 0; index < indexArray.length; index ++) {
+      let tmp = await this.page.videoCheck(indexArray[index], TEN_SECONDS);
+      console.log('-> Received video[' + index + '] ' + tmp);
+      result += tmp;
+      if (index < indexArray.length - 1) {
+        result += ' | ';
       }
+      if (tmp !== 'video') {
+        error = true;
+      }
+    }
+    if (error) {
+      this.testReporter.textAttachment(this.report, "Received videos", result, "plain");
+      throw new KiteTestError(Status.FAILED, "Some videos are still or blank: " + result);
     }
   }
 }

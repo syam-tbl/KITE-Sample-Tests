@@ -1,7 +1,7 @@
 const {TestStep, TestUtils} = require('kite-common');
 const waitAround = TestUtils.waitAround;
 
-class StartVideoCallStep extends TestStep {
+module.exports = class StartVideoCallStep extends TestStep {
 
   constructor(kiteBaseTest) {
     super();
@@ -16,7 +16,7 @@ class StartVideoCallStep extends TestStep {
   }
 
   stepDescription() {
-    if (this.id % this.usersPerRoom == 0) {
+    if (this.id % this.usersPerRoom === 0) {
       return "Starting the video call";
     } else {
       return "Waiting for the video call to start";
@@ -24,10 +24,10 @@ class StartVideoCallStep extends TestStep {
   }
 
   async step() {  
-    if (this.id % this.usersPerRoom == 0) {
+    if (this.id % this.usersPerRoom === 0) {
       await this.page.startVideoCall();
       await waitAround(1000);
-      const roomUrl = await this.driver.getCurrentUrl();
+      const roomUrl = await this.page.currentUrl();
       this.io.emit("registerRoomUrl", roomUrl, this.id);
       console.log("Video call started on url: " + roomUrl);
     } else {
@@ -36,5 +36,3 @@ class StartVideoCallStep extends TestStep {
     await waitAround(2000); 
   }
 }
-
-module.exports = StartVideoCallStep;

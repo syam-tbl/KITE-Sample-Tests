@@ -35,7 +35,7 @@ class JoinVideoCallStep extends TestStep {
   }
 
   stepDescription() {
-    if (this.id % this.usersPerRoom != 0) {
+    if (this.id % this.usersPerRoom !== 0) {
       return "Joining the video call";
     } else {
       return "Waiting for others to join the video call";
@@ -43,15 +43,13 @@ class JoinVideoCallStep extends TestStep {
   }
 
   async step() {
-  
     if (this.id % this.usersPerRoom != 0) {
-      const d = this.driver;
       await this.io.emit("getRoomUrl", this.id, this.usersPerRoom);
       this.roomUrl = await getRoomUrl(this.io);
       console.log("this.roomUrl  = " + this.roomUrl );
-      await this.driver.get(this.roomUrl);
-      await waitAround(1000); 
-      this.page.clickJoin();
+      await this.page.open(this.roomUrl, this.timeout);
+      await waitAround(1000);
+      await this.page.clickJoin();
     } else {
       await waitAround(3 * 1000);
     } 
