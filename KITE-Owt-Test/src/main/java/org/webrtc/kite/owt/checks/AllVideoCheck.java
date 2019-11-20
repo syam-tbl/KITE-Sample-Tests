@@ -10,6 +10,7 @@ import org.webrtc.kite.owt.pages.OWTPage;
 import java.util.List;
 
 import static io.cosmosoftware.kite.entities.Timeouts.ONE_SECOND_INTERVAL;
+import static io.cosmosoftware.kite.util.ReportUtils.getStackTrace;
 import static io.cosmosoftware.kite.util.TestUtils.videoCheck;
 import static io.cosmosoftware.kite.util.TestUtils.waitAround;
 
@@ -44,6 +45,7 @@ public class AllVideoCheck extends TestStep {
         waitingTime += 1;
       }
       if (videos.size() < numberOfParticipants) {
+        logger.error("videos.size() < numberOfParticipants");
         throw new KiteTestException(
           "Unable to find " + numberOfParticipants + " <video> element on the page. No video found = "
             + videos.size(), Status.FAILED);
@@ -64,10 +66,14 @@ public class AllVideoCheck extends TestStep {
       if (error) {
         reporter.textAttachment(report, "Received Videos", videoCheck, "plain");
         throw new KiteTestException("Some videos are still or blank: " + videoCheck, Status.FAILED);
+      } else {
+        logger.info("Video checks: " + videoCheck);
       }
     } catch (KiteTestException e) {
+      logger.error(getStackTrace(e));
       throw e;
     } catch (Exception e) {
+      logger.error(getStackTrace(e));
       throw new KiteTestException("Error looking for the video", Status.BROKEN, e);
     }
   }

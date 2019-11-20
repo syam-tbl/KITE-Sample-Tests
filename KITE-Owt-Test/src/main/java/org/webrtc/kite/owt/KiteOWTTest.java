@@ -10,35 +10,17 @@ import org.webrtc.kite.tests.KiteBaseTest;
 import org.webrtc.kite.tests.TestRunner;
 
 import javax.json.JsonObject;
-import javax.json.JsonString;
-import java.util.ArrayList;
-import java.util.List;
 
 public class KiteOWTTest extends KiteBaseTest {
 
-  private JsonObject getStatsSdk = null;
   private JsonObject getChartsConfig = null;
   private boolean allureCharts = false;
-  private String localPeerConnection;
-  private final List<String> remotePeerConnections = new ArrayList<>();
   
   @Override
   protected void payloadHandling() {
     super.payloadHandling();
     if (this.payload != null) {
-      this.getStatsSdk = this.payload.getJsonObject("getStatsSdk");
       this.getChartsConfig = this.payload.getJsonObject("getCharts");
-      if (getStatsConfig != null && getStatsConfig.getJsonArray("peerConnections") != null) {
-        int index = 0;
-        for (JsonString j:getStatsConfig.getJsonArray("peerConnections").getValuesAs(JsonString.class)) {
-          if (index == 0) {
-            localPeerConnection = getStatsConfig.getJsonArray("peerConnections").getString(0);
-          } else {
-            remotePeerConnections.add(j.getString());
-          }
-          index++;
-        }
-      }
       this.allureCharts = this.getChartsConfig != null && this.getChartsConfig.getBoolean("enabled");
     }
   }
@@ -48,6 +30,10 @@ public class KiteOWTTest extends KiteBaseTest {
     final OWTPage owtPage = new OWTPage(runner);
     runner.addStep(new OpenUrlStep(runner, url));
     runner.addStep(new FirstVideoCheck(runner, owtPage));
+
+    if (this.takeScreenshotForEachTest()) {
+      runner.addStep(new ScreenshotStep(runner));
+    }
     runner.addStep(new AllVideoCheck(runner, getMaxUsersPerRoom(), owtPage));
     if (this.getStats()) {
       runner.addStep(new GetStatsStep(runner, getStatsConfig, owtPage));

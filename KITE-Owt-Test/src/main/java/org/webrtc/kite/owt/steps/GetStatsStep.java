@@ -25,18 +25,6 @@ public class GetStatsStep extends TestStep {
   private final JsonObject getStatsConfig;
   private final OWTPage owtPage;
 
-  /**
-   * for Janus demo testing, the name of the local peer connection are like "pluginHandle" + webrtcStuff.pc in the website source code (https://janus.conf.meetecho.com)
-   * list of pluginHandle (corresponding Plugin Demo name):
-   * - echotest (Echo Test)
-   * - streaming (Streaming)
-   * - sfutest (Video Room)
-   * - videocall (Video Call)
-   * - screentest (Screen Share)
-   * <p>
-   * see configs file to set the name of the peer connection for each test (key: 'peerConnection')
-   */
-
   public GetStatsStep(Runner runner, JsonObject getStatsConfig, OWTPage owtPage) {
     super(runner);
     this.owtPage = owtPage;
