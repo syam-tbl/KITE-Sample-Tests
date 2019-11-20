@@ -1,0 +1,75 @@
+{
+  "name": "OWT Test Suite",
+  "grids": [
+    {
+      "type": "local",
+      "url": "http://localhost:4444/wd/hub"
+    }
+  ],
+  "_matrix": [[0,1]],
+  "tests": [
+    {
+      "name": "OWT Test %ts",
+      "tupleSize": 2,
+      "description": "Owt test description",
+      "testImpl": "org.webrtc.kite.owt.KiteOWTTest",
+      "payload":{
+        "url": "https://47.101.137.210:3004/",
+        "usersPerRoom": 2,
+        "meetingDuration": 30,
+        "takeScreenshotForEachTest": true,
+        "getStats" : {
+          "enabled": false,
+          "statsCollectionTime": 2000,
+          "statsCollectionInterval": 1000,
+          "peerConnections": ["window.pc", "window.remotePc"],
+          "selectedStats" : ["inbound-rtp", "outbound-rtp", "candidate-pair"]
+        },
+        "getCharts" : {
+          "enabled": true,
+          "pathToGenerateChartsFile": "/generateCharts-min.js",
+          "pathToChartBundleMin": "/chart.bundle.min.js",
+          "chartsStatsInterval": 2000,
+          "peerConnections": ["window.pc", "window.remotePc"],
+          "config": {
+            "width": 500,
+            "height": 500,
+            "colors": [
+              "#1DABE6",
+              "#C3CED0",
+              "#41ab48",
+              "#E43034",
+              "#000000",
+              "#AF060F"
+            ],
+            "filter": [
+              "inbound-rtp",
+              "outbound-rtp",
+              "candidate-pair"
+            ],
+            "charts": [
+              "receivedAudioBitrates",
+              "receivedVideoBitrates",
+              "sentAudioBitrates",
+              "sentVideoBitrates",
+              "audioPacketLoss",
+              "videoPacketLoss",
+              "audioJitter",
+              "videoFramesSent",
+              "audioLevel",
+              "framesReceivedRate",
+              "framesSentRate"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "clients": [
+    {
+      "browserName": "chrome",
+      "platform": "localhost",
+      "flags": ["autoplay-policy=no-user-gesture-required"]
+    }
+  ]
+}

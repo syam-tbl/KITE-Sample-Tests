@@ -73,5 +73,6 @@
     <module>KITE-OpenVidu-Test</module>
     <module>KITE-Hangouts-Test</module>
     <module>TEST-Sample-Tests</module>
+    <module>KITE-Owt-Test</module>
   </modules>
 </project>
