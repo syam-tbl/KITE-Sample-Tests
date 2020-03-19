@@ -100,10 +100,10 @@ public class JanusVideoCallTest extends KiteBaseTest {
     StringBuilder name = new StringBuilder();
     for(int index = 0; index < this.tuple.size(); ++index) {
       Client client = this.tuple.get(index);
-      name.append(client.getPlatform().name(), 0, 3);
-      name.append(client.getBrowserName(), 0, 2);
-      if (client.getVersion() != null) {
-        name.append(client.getVersion());
+      name.append(client.getBrowserSpecs().getPlatform().name(), 0, 3);
+      name.append(client.getBrowserSpecs().getBrowserName(), 0, 2);
+      if (client.getBrowserSpecs().getVersion() != null) {
+        name.append(client.getBrowserSpecs().getVersion());
       }
     }
     return name.toString();

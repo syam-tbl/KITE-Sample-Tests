@@ -51,7 +51,7 @@ public class MediasoupPage extends BasePage {
    */
   public void load(String url) {
 
-    loadPage(webDriver, url, 20);
+    loadPage(url, 20);
 
     //try reloading 3 times as it sometimesgets stuck at 'publishing...'
     for (int i = 0; i < 3; i++) {
@@ -61,7 +61,7 @@ public class MediasoupPage extends BasePage {
         break;
       } catch (TimeoutException e) {
         logger.warn(" reloading the page (" + (i + 1) + "/3)");
-        loadPage(webDriver, url, 20);
+        loadPage(url, 20);
       }
     }
   }
