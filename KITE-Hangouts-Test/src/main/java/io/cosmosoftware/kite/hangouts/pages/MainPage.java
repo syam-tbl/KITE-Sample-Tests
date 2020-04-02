@@ -55,7 +55,7 @@ public class MainPage extends BasePage {
   }
   
   public void open(String url) {
-    loadPage(webDriver, url, 20);
+    loadPage(url, 20);
   }
   
   public void clickSignIn() throws KiteInteractionException {

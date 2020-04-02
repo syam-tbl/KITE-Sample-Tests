@@ -38,7 +38,9 @@ class Hangout extends KiteBaseTest {
     } catch (e) {
       console.log('Exception in testScript():' + e);
     } finally {
-      await this.driver.quit();
+      if (typeof this.driver !== 'undefined') {
+        await this.driver.quit();
+      }
     }
   }
 }
