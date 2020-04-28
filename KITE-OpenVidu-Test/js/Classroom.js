@@ -10,7 +10,7 @@ class Classroom extends KiteBaseTest {
 
   async testScript() {
     try {
-      this.driver = await WebDriverFactory.getDriver(this.capabilities, this.remoteUrl);
+      this.driver = await WebDriverFactory.getDriver(this.capabilities);
       this.page = new ClassroomPage(this.driver);
 
       let openUrlStep = new OpenUrlStep(this);

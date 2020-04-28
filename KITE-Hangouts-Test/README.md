@@ -164,7 +164,7 @@ The entry file is Hangouts.js and the list of steps and checks are added in the 
 ```
   async testScript() {
     try {
-      this.driver = await WebDriverFactory.getDriver(this.capabilities, this.remoteUrl);
+      this.driver = await WebDriverFactory.getDriver(this.capabilities);
       this.page = new MainPage(this.driver);
 
       let loginStep = new LoginStep(this);

@@ -10,7 +10,7 @@ class JanusVideoCall extends KiteBaseTest {
   
   async testScript() {
     try {
-      this.driver = await WebDriverFactory.getDriver(this.capabilities, this.remoteUrl);
+      this.driver = await WebDriverFactory.getDriver(this.capabilities);
       this.page = new JanusVideoCallPage(this.driver);
 
       let joinUrlStep = new JoinUrlStep(this);

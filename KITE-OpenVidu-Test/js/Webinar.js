@@ -11,7 +11,7 @@ class Webinar extends KiteBaseTest {
   
   async testScript() {
     try {
-      this.driver = await WebDriverFactory.getDriver(this.capabilities, this.remoteUrl);
+      this.driver = await WebDriverFactory.getDriver(this.capabilities);
       this.page = new WebinarPage(this.driver);
 
       let openUrlStep = new OpenUrlStep(this);
