@@ -24,7 +24,7 @@ public class StartVideoCallStep extends TestStep {
 
   @Override
   public String stepDescription() {
-    if (id % roomManager.getUsersPerRoom() == 0) {
+    if (id % roomManager.getMaxCapacity() == 0) {
       return "Starting the video call";
     } else {
       return "Waiting for the video call to start";
@@ -33,11 +33,11 @@ public class StartVideoCallStep extends TestStep {
 
   @Override
   protected void step() throws KiteTestException {
-    if (id % roomManager.getUsersPerRoom() == 0) {
+    if (id % roomManager.getMaxCapacity() == 0) {
       mainPage.startVideoCall();
       waitAround(ONE_SECOND_INTERVAL);
       String roomUrl = webDriver.getCurrentUrl();
-      roomManager.setDynamicUrl(id, roomUrl);
+      roomManager.setRoomUrl(roomUrl);
       logger.info("Video call started on url: " + roomUrl);
     } else {
       waitAround(THREE_SECOND_INTERVAL);

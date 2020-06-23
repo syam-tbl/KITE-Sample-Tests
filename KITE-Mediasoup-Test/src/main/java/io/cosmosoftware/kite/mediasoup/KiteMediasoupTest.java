@@ -30,7 +30,7 @@ public class KiteMediasoupTest extends KiteBaseTest {
   @Override
   public void populateTestSteps(TestRunner runner) {
     try {
-      runner.addStep(new JoinVideoCallStep(runner, getRoomManager().getRoomUrl()));
+      runner.addStep(new JoinVideoCallStep(runner, getRoomManager().getRoomUrl(true)));
       runner.addStep(new SetUserIdStep(runner, "user" + runner.getId()));
       if (!this.fastRampUp()) {
         runner.addStep(new FirstVideoCheck(runner));

@@ -20,7 +20,7 @@ public class JoinVideoCallStep extends TestStep {
   public JoinVideoCallStep(TestRunner runner, RoomManager roomManager, MainPage mainPage) {
     super(runner);
     this.id = runner.getId();
-    logger.info( "TestRunner id = " + this.id + " userPerRoom = " + roomManager.getUsersPerRoom());
+    logger.info( "TestRunner id = " + this.id + " userPerRoom = " + roomManager.getMaxCapacity());
     this.roomManager = roomManager;
     this.mainPage = mainPage;
   }
@@ -33,10 +33,10 @@ public class JoinVideoCallStep extends TestStep {
   
   @Override
   protected void step() throws KiteTestException {
-    if (id % roomManager.getUsersPerRoom() == 0) {
+    if (id % roomManager.getMaxCapacity() == 0) {
       waitAround(THREE_SECOND_INTERVAL);
     } else {
-      String roomUrl = roomManager.getDynamicUrl(id);
+      String roomUrl = roomManager.getRoomUrl();
       logger.info("Joining call at: " + roomUrl);
       mainPage.open(roomUrl);
       mainPage.clickJoin();
