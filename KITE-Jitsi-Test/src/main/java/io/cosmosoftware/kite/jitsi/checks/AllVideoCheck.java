@@ -5,8 +5,13 @@ import io.cosmosoftware.kite.interfaces.Runner;
 import io.cosmosoftware.kite.jitsi.pages.MeetingPage;
 import io.cosmosoftware.kite.report.Reporter;
 import io.cosmosoftware.kite.report.Status;
+import io.cosmosoftware.kite.steps.StepPhase;
 import io.cosmosoftware.kite.steps.TestStep;
+import io.cosmosoftware.kite.steps.VideoDisplayCheck;
 import org.openqa.selenium.WebDriver;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.cosmosoftware.kite.entities.Timeouts.ONE_SECOND_INTERVAL;
 import static io.cosmosoftware.kite.util.TestUtils.videoCheck;
@@ -16,11 +21,13 @@ public class AllVideoCheck extends TestStep {
   
   private final int numberOfParticipants;
   private final MeetingPage meetingPage;
+  private final Runner runner;
 
   public AllVideoCheck(Runner runner, int numberOfParticipants) {
     super(runner);
     this.numberOfParticipants = numberOfParticipants;
     this.meetingPage = new MeetingPage(runner);
+    this.runner = runner;
   }
 
   @Override
@@ -29,40 +36,19 @@ public class AllVideoCheck extends TestStep {
   }
 
   @Override
-  protected void step() throws KiteTestException {
-    try {
-      // wait a while to allow all videos to load.
-      waitAround(numberOfParticipants * 3 * ONE_SECOND_INTERVAL);
-      meetingPage.clickVideoToggle();
-      logger.info("Looking for video elements");
-      if (meetingPage.numberOfVideos() < numberOfParticipants) {
-        throw new KiteTestException(
-            "Unable to find "
-                + numberOfParticipants
-                + " <video> element on the page. No video found = "
-                + meetingPage.numberOfVideos(),
-            Status.FAILED);
-      }
-      String videoCheck = "";
-      boolean error = false;
-      for (int i = 1; i < numberOfParticipants; i++) {
-        String v = videoCheck(webDriver, i);
-        videoCheck += v;
-        if (i < numberOfParticipants - 1) {
-          videoCheck += "|";
-        }
-        if (!"video".equalsIgnoreCase(v)) {
-          error = true;
-        }
-      }
-      if (error) {
-        reporter.textAttachment(report, "Reveived Videos", videoCheck, "plain");
-        throw new KiteTestException("Some videos are still or blank: " + videoCheck, Status.FAILED);
-      }
-    } catch (KiteTestException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new KiteTestException("Error looking for the video", Status.BROKEN, e);
+  protected void step() {
+    meetingPage.clickVideoToggle();
+    List<VideoDisplayCheck> checks = prepareChecks();
+    for (VideoDisplayCheck check : checks) {
+      check.processTestStep(StepPhase.DEFAULT, this.report, false);
     }
+  }
+
+  private List<VideoDisplayCheck> prepareChecks() {
+    List<VideoDisplayCheck> checks = new ArrayList<>();
+    for (int i = 1; i < numberOfParticipants; i++) {
+      checks.add(new VideoDisplayCheck(this.runner, meetingPage, i, "remote-"+i, false));
+    }
+    return checks;
   }
 }

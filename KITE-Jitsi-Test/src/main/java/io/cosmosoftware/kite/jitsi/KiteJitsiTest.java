@@ -20,7 +20,6 @@ import static org.webrtc.kite.Utils.getStackTrace;
 public class KiteJitsiTest extends KiteBaseTest {
   
   private JsonObject getStatsSdk;
-  private String roomId = UUID.randomUUID().toString();
   @Override
   protected void payloadHandling() {
     super.payloadHandling();
@@ -34,10 +33,13 @@ public class KiteJitsiTest extends KiteBaseTest {
   @Override
   protected void populateTestSteps(TestRunner runner) {
     try {
-      runner.addStep(new JoinRoomStep(runner, getRoomManager().getRoomUrl() + roomId));
+      runner.addStep(new JoinRoomStep(runner,
+              getRoomManager().getPreconfiguredRooms().isEmpty()
+                      ? getRoomManager().getRoomUrl()
+                      : getRoomManager().getPreconfigureRooUrl()));
       runner.addStep(new SetUserIdStep(runner, "user" + runner.getId()));
       runner.addStep(new FirstVideoCheck(runner));
-      runner.addStep(new AllVideoCheck(runner, getMaxUsersPerRoom()));
+      runner.addStep(new AllVideoCheck(runner, roomManager.getMaxCapacity()));
       if (this.getStats()) {
         runner.addStep(new GetStatsStep( runner, getStatsConfig));
       }
