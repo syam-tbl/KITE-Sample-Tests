@@ -14,6 +14,7 @@ class CallPage extends OpenViduBasePage {
   async joinSession(sessionId) {
     // const sessionId = session + stepInfo.uuid;
     let room = await this.driver.findElement(roomInput);
+    await room.clear();
     await room.sendKeys(sessionId);
     await room.sendKeys(Key.ENTER);
     await this.driver.wait(until.elementLocated(joinButton) || 6000);
